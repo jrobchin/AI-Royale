@@ -6,7 +6,6 @@ from engines.pong import game as pong
 import random
 
 GAME = 'pong'
-REMOTE = True
 
 def format_for_bots(state, paddle):
     """
@@ -35,25 +34,15 @@ if __name__ == "__main__":
             events = {}
             for role, attrs in bots.items():
                 state_for_bot = format_for_bots(state, role)
-                if REMOTE:
-                    res = requests.post(attrs['url'], data=state_for_bot).json()
-                    move = res['event']
-                    if move == -1:
-                        events['lpaddle'] = "DOWN"
-                        events['rpaddle'] = "DOWN"
-                    elif move == 1:
-                        events['lpaddle'] = "UP"
-                        events['rpaddle'] = "UP"
-                    break
-                else:
-                    if state_for_bot['ballPos'][1] > state_for_bot['paddle'][1] == -1:
-                        events['lpaddle'] = "DOWN"
-                        events['rpaddle'] = "DOWN"
-                    elif state_for_bot['ballPos'][1] < state_for_bot['paddle'][1] == 1:
-                        events['lpaddle'] = "UP"
-                        events['rpaddle'] = "UP"
-                    break
-                    time.sleep(0.2)
+                res = requests.post(attrs['url'], data=state_for_bot).json()
+                move = res['event']
+                if move == -1:
+                    events['lpaddle'] = "DOWN"
+                    events['rpaddle'] = "DOWN"
+                elif move == 1:
+                    events['lpaddle'] = "UP"
+                    events['rpaddle'] = "UP"
+                break
 
             # calculate next state
             state = pong.Pong.from_state(state).next_state(state, events)
