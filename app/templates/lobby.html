@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for player in players %}
+  <p>
+    {{ player }}
+  </p>
+{% endfor %}
+
+{% if ready %}
+<a href="/game/start/{{ gid }}"><button>Start</button></a>
+{% else %}
+<p style="font-size: 12px; color: grey;">Waiting for another player to join the server... <img style="width: 30px;" src="http://www.goldielondon.com/skin/frontend/smartwave/granada/images/opc-ajax-loader.gif" alt=""></p>
+<button disabled>Start</button>
+{% endif %}
+
+<script>
+  
+  var players = {{ player_count }};
+
+  setInterval(() => {
+    fetch('/game/state/{{ gid }}')
+      .then((data) => data.json())
+      .then((state) => {
+        if (state.players.length != players) {
+          players = state.players;
+          window.location.reload();
+        }
+      })
+      .catch();
+  }, 800);
+</script>
+{% endblock %}

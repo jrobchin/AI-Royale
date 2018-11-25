@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<canvas id='cvs' width="512" height="256" style="border: 1px black solid;"></canvas>
+<script>
+  const ENDPOINT = window.location.href + "?state=true"
+  const PADDLE_HEIGHT = 35*2; 
+  const PADDLE_WIDTH = 5;
+  const BALL_RADIUS = 4;
+
+  var c = document.getElementById("cvs");
+  var ctx = c.getContext("2d");
+
+  // Render state
+  function drawPaddle(x, y, side) {
+    ctx.beginPath();
+    if (side == "RIGHT") {
+      ctx.rect(x, y, -PADDLE_WIDTH, PADDLE_HEIGHT);
+    } else if (side == "LEFT") {
+      ctx.rect(x, y, PADDLE_WIDTH, PADDLE_HEIGHT);
+    }
+    ctx.fillStyle = '#6480E2';
+    ctx.fill();
+  }
+
+  function drawBall(x, y) {
+    ctx.beginPath();
+    ctx.arc(x, y, BALL_RADIUS, 0, 2*Math.PI, false);
+    ctx.stroke();
+  }
+
+  function drawPong(state) {
+    let { lpaddle, rpaddle, ball } = state;
+    ctx.clearRect(0, 0, c.width, c.height);
+    drawPaddle(lpaddle[0], lpaddle[1], "LEFT");
+    drawPaddle(rpaddle[0], rpaddle[1], "RIGHT");
+    drawBall(ball.pos[0], ball.pos[1]);
+  }
+
+  // Constantly grab state and render
+  setInterval(() => {
+    fetch(ENDPOINT)
+    .then(async (data) => {
+      let res = await data.json();
+      console.log(res);
+      return res;
+    })
+    .then((state) => drawPong(state))
+    .catch(function(err) {
+      console.log(err);
+    });
+  }, 500);
+</script>
+{% endblock %}
