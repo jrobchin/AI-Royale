@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block content %}
+ <!-- two column information -->
+ <div class ="row">
+    <div class="col-sm-6 scrollClass">
+      <div class="mx-auto" style="text-align: center;margin-top: 20px;">
+          <h1>Writing Your First Bot!</h1>
+          <p>Saying <i>Hello World!</i>, the AI Royale way.</p>
+      </div>
+      <div style="padding-left: 20px;">
+        <h3> Let's teach you some basic programming skills! </h3>
+        <p>Welcome to the exciting world of programming!</p>
+
+        <p>In this tutorial, we're going to be making a "Hello World" version of our bot for Pong!</p>
+
+        <p>We're going to keep things relatively simple. We'll program our bot logic as follows:</p>
+
+        <ul>
+        <li>If the ball is above the paddle, we move the paddle up.</li>
+
+        <li>If the ball is below the paddle, we move the paddle down.</li>
+
+        <li>If the ball is at the same position as the paddle, we don't move the paddle.</li>
+        </ul>
+
+        <p>We'll use JavaScript for this tutorial, reason being, it's use is widespread in a variety of applications and make's it easy to learn.</p>
+
+        <p>Let's set up our code on the righthand side of the page first.
+        You'll need STDLIB account if you don't have one already, click the icon in the top right to sign up, it's totally free!
+        Next, go to "Community API Scores" and look for bot-builder.
+        Click on it and click "Create a New API"</p>
+
+        <p>Now we're ready to start learning how to code bot logic!</p>
+
+        <p>Let's start off with learning <em>variables</em>
+        Variables can store varied types of information, they can store:</p>
+
+        <ul>
+        <li>Strings: "Hello There!"</li>
+
+        <li>Numbers: 3,4,6</li>
+
+        <li>Characters: a,y,l</li>
+        </ul>
+
+        <p>Here's how we declare variables in JavaScript!</p>
+
+<pre style='color:#000000;background:#E8E8E8;padding-top: 5px; padding-bottom: 5px; padding-left: 5px;'>a <span style='color:#808030; '>=</span> <span style='color:#008c00; '>4</span><span style='color:#800080; '>;</span> <span style='color:#696969; '>// Integer</span>
+b <span style='color:#808030; '>=</span> <span style='color:#800000; '>"</span><span style='color:#0000e6; '>hello</span><span style='color:#800000; '>"</span><span style='color:#800080; '>;</span> <span style='color:#696969; '>// String</span>
+c <span style='color:#808030; '>=</span> <span style='color:#800000; '>'</span><span style='color:#0000e6; '>c</span><span style='color:#800000; '>'</span><span style='color:#800080; '>;</span> <span style='color:#696969; '>// Character</span>
+<span style='color:#696969; '>// We can also use parameters like const and let!</span>
+<span style='color:#696969; '>// What we have here is a const variable.</span>
+<span style='color:#696969; '>// This means you cannot change it after you declare it!</span>
+<span style='color:#800000; font-weight:bold; '>const</span> a <span style='color:#808030; '>=</span> <span style='color:#008c00; '>4</span><span style='color:#800080; '>;</span>
+<span style='color:#696969; '>// Let is a safer way of defining variables, /</span>
+<span style='color:#696969; '>// it is the common standard in practical use cases.</span>
+<span style='color:#696969; '>// You can redefine the value later on</span>
+<span style='color:#800000; font-weight:bold; '>let</span> b <span style='color:#808030; '>=</span> <span style='color:#008c00; '>4</span><span style='color:#800080; '>;</span>
+</pre>
+        <!--Created using ToHtml.com on 2018-11-25 11:58:57 UTC -->
+
+        <p>So let's think about how we can use our knowledge of variables to help make some logic for our bot.
+        We know we're given information on the game state in a format like this:</p>
+
+<pre style='color:#000000;background:#E8E8E8;padding-top: 5px; padding-bottom: 5px; padding-left: 5px;'><span style='color:#696969; '>{</span>
+<span style='color:#696969; '>&#xa0;&#xa0;&#xa0;&#xa0;"ballPos": [5, 7],</span>
+<span style='color:#696969; '>&#xa0;&#xa0;&#xa0;&#xa0;"ballVel": [7,9],</span>
+<span style='color:#696969; '>&#xa0;&#xa0;&#xa0;&#xa0;"paddle": [3,3],</span>
+<span style='color:#696969; '>}</span>
+</pre>
+<!--Created using ToHtml.com on 2018-11-25 12:00:31 UTC -->
+
+        <p>Let's first think about how we're given information on the game state:</p>
+
+        <ul>
+        <li>ballPos: This gives us the X and Y coordinate of the ball at the given frame state.</li>
+
+        <li>ballVel: This gives us the X and Y velocity values at the given frame state.</li>
+
+        <li>paddle: This gives us information on OUR paddle and it's X and Y coordinates.</li>
+        </ul>
+
+        <p>Following our logic that we stated earlier, we might need to store some of these values as variables for us to use.
+        Since our bot logic is only concerned with the Y coordinate (we check if paddle is higher, lower, or same)
+        Let's store the Y coordinate of the ball and the paddle in variables so we can reference them later!</p>
+
+<pre style='color:#000000;background:#E8E8E8;padding-top: 5px; padding-bottom: 5px; padding-left: 5px;'><span style='color:#696969; '>// We're going to use constants as we don't want to</span>
+<span style='color:#696969; '>// change up our game state and make wrong actions!</span>
+<span style='color:#800000; font-weight:bold; '>const</span> ballPosY <span style='color:#808030; '>=</span> ballPos<span style='color:#808030; '>[</span><span style='color:#008c00; '>1</span><span style='color:#808030; '>]</span><span style='color:#800080; '>;</span>
+<span style='color:#696969; '>// Since we're given the X and Y in an array, </span>
+<span style='color:#696969; '>// we ask for index 1 to get the Y coordinate</span>
+<span style='color:#800000; font-weight:bold; '>const</span> paddleY <span style='color:#808030; '>=</span> paddle<span style='color:#808030; '>[</span><span style='color:#008c00; '>1</span><span style='color:#808030; '>]</span><span style='color:#800080; '>;</span>
+<span style='color:#696969; '>// Same logic as the above line applies here</span>
+</pre>
+        <!--Created using ToHtml.com on 2018-11-25 12:01:20 UTC -->
+
+        <p>If you've made it this far, awesome! We're almost there! However, the way the API works, we already handle all the game state for you! Check it out on the right hand side, you'll see all the variables you have access to, to understand the game state.</p>
+<p>Now, with this given information, we want to implement the decision making process of our bot logic. We do this using a programming concept called conditional statements! In this case, we're going to be using if statements. They work similarly to how our decision processes work in real life! Think of a simple scenario like this: If I'm hungry, I'll get a sandwich, if I'm not, then I won't.
+We're going to do something similar now for our bot logic.</p>
+
+<pre style='color:#000000;background:#E8E8E8;padding-top: 5px; padding-bottom: 5px; padding-left: 5px;'><span style='color:#696969; '>// This goes under the comment of 'BOT LOGIC HERE'</span>
+<span style='color:#696969; '>// We're going to change an object called "event".</span>
+<span style='color:#696969; '>// This is what we pass on to the game server so our move can be made.</span>
+<span style='color:#696969; '>// We use comparisons &lt; and > to help us understand</span>
+<span style='color:#696969; '>// where the ball and paddle are in relation to each other</span>
+<span style='color:#800000; font-weight:bold; '>if</span> <span style='color:#808030; '>(</span>ballPosY <span style='color:#808030; '>&lt;</span> paddleY<span style='color:#808030; '>)</span> <span style='color:#800080; '>{</span>
+<span style='color:#696969; '>// This is if the paddle is higher than the ball, we will want to move it down</span>
+event<span style='color:#808030; '>.</span>move <span style='color:#808030; '>=</span> <span style='color:#808030; '>-</span><span style='color:#008c00; '>1</span><span style='color:#800080; '>;</span> <span style='color:#696969; '>// -1 signifies us moving it down!</span>
+<span style='color:#800080; '>}</span> <span style='color:#800000; font-weight:bold; '>else</span> <span style='color:#800000; font-weight:bold; '>if</span> <span style='color:#808030; '>(</span>ballPosY <span style='color:#808030; '>></span> paddleY<span style='color:#808030; '>)</span> <span style='color:#800080; '>{</span>
+event<span style='color:#808030; '>.</span>move <span style='color:#808030; '>=</span> <span style='color:#008c00; '>1</span><span style='color:#800080; '>;</span> <span style='color:#696969; '>// 1 signifies us moving it up!</span>
+<span style='color:#800080; '>}</span> <span style='color:#800000; font-weight:bold; '>else</span> <span style='color:#800080; '>{</span>
+<span style='color:#696969; '>// if they are at the same level</span>
+event<span style='color:#808030; '>.</span>move <span style='color:#808030; '>=</span> <span style='color:#008c00; '>0</span><span style='color:#800080; '>;</span> <span style='color:#696969; '>// We do not move</span>
+<span style='color:#800080; '>}</span>
+<span style='color:#696969; '>// The above is what our final code should look like</span>
+</pre>
+
+
+        <!--Created using ToHtml.com on 2018-11-25 11:46:11 UTC -->
+    <!--Created using ToHtml.com on 2018-11-25 11:36:10 UTC -->
+
+        <p>Believe it or not, that's it! We've created our first bot for Pong! Let's go ahead and run it!
+        Click the green "Run" button on the bottom right of our code editor. That will give us our "API Endpoint Link". Ignore the errors for now, they do not stop us from running our code. Enter the API Endpoint Link in the field below and watch it go!</p>
+      </div>
+      <div class="form-group" style="padding-left: 20px;">
+          <form action="/game/create?computer=true" method="POST">
+            <label for="inputAPIEndpoint">API Endpoint Link</label>
+            <input type="text" class="form-control" id="inputAPIEndpoint" name="bot_url" placeholder="Enter endpoint link">
+            <input type="hidden" name="bot_role" value="lpaddle">
+            <small class="form-text text-muted">Don't worry this won't cost you anything. This'll help us interface with your bot!</small>
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      <br>
+    </div>
+    <div class="col-sm-6">
+      <div class = "embed-responsive embed-responsive-1by1 scrollClass">
+        <iframe class="embed-responsive-item" src="https://code.stdlib.com/"></iframe>
+      </div>
+    </div>
+</div>
+{% endblock %}

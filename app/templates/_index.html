@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- two column information -->
+<div class ="row">
+  <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+      <div class="mx-auto" style="text-align: center;margin-top: 150px;">
+          <h1>Welcome to AI Royale!</h1>
+          <p>Learn programming and compete against others!</p>
+          
+          {% if not uid %}
+          <p>Enter a username to get started!</p>
+          <form action="/" method="POST">
+            <label for="input-uid">Username:</label>
+            <input type="text" name="uid" id="input-uid">
+            <input type="submit">
+          </form>
+          {% else %}
+          <p>Hey {{ uid }}!</p>
+          <a class="link-button" href="/tutorial">Create Your First Bot!</a>
+          {% endif %}
+      </div>
+    </div>
+  <div class="col-sm-3"></div>
+</div>
+{% endblock %}

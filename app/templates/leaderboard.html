@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- two column information -->
+    <div class ="row">
+      <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+          <div class="mx-auto" style="text-align: center;margin-top: 20px;">
+              <h2>Live Games: Pong</h2>
+              <p>Find players to play against and check out the best of the best!</p>
+          </div>
+          <h3 class="d-inline-block">Lobbies</h3>
+          <a href="/game/create">
+            <button class="btn btn-outline-success my-2 my-sm-0 align-top float-right">Create a Lobby</button>
+          </a>
+          <table class="table table-hover" style="text-align: center;">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">User</th>
+                <th scope="col">ELO Rating</th>
+                <th scope="col">Players</th>
+                <th scope="col">Lobby</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for game in games %}
+                <tr>
+                  <th scope="row">1</th>
+                  <td>{{ game['owner'] }}</td>
+                  <td>{{ game['elo'] }}</td>
+                  <td>{{ game['n_players'] }}/2</td>
+                  <td><a href="/game/join/{{ game['gid'] }}"><button class="btn btn-outline-success my-2 my-sm-0 align-middle" type="submit">{{ game['button'] }}</button></a></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+          <h3>Top 5 Leaderboards</h3>
+          <table class="table table-hover" style="text-align: center;">
+            <thead>
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">User</th>
+                <th scope="col">ELO Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>hackWestern2</td>
+                <td>2378</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>jasonR</td>
+                <td>2104</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>charlieL66</td>
+                <td>2067</td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>superAnd112</td>
+                <td>852</td>
+              </tr>
+            </tbody>
+          </table>
+          <!--
+          <h3>Your Bots</h3>
+          <table class="table table-hover" style="text-align: center;">
+            <thead>
+              <tr>
+                <th scope="col">Bot Name</th>
+                <th scope="col">Use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>helloWorld!</td>
+                <td><button class="btn btn-outline-success my-2 my-sm-0 align-middle" type="submit">Use</button></td>
+              </tr>
+              <tr>
+                <td>a better bot</td>
+                <td><button class="btn btn-outline-success my-2 my-sm-0 align-middle" type="submit">Use</button></td>
+              </tr>
+              <tr>
+                <td>world class bot!</td>
+                <td><button class="btn btn-outline-success my-2 my-sm-0 align-middle" type="submit">Use</button></td>
+              </tr>
+              <tr>
+                <td>the bot to beat them all</td>
+                <td><button class="btn btn-outline-success my-2 my-sm-0 align-middle" type="submit">Use</button></td>
+              </tr>
+            </tbody>
+          </table>
+          -->
+        </div>
+        <div class="col-sm-3"></div>
+      </div>
+{% endblock %}

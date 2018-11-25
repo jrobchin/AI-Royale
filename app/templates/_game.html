@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if uid %}
+<h1>Hey {{ uid }}.</h1>
+{% endif %}
+
+{% if not uid %}
+<form action="/game/" method="POST">
+  <label for="input-uid">Username:</label>
+  <input type="text" name="uid" id="input-uid">
+  <input type="submit">
+</form>
+{% endif %}
+
+{% for game in games %}
+<p>
+  <a href="/game/join/{{ game[1] }}">{{ game[0] }}</a>
+</p>
+{% endfor %}
+
+{% if uid %}
+<form action="/game/create" method="POST">
+  <label for="input-bot_url">Bot Url:</label>
+  <input type="text" name="bot_url" id="input-bot_url">
+
+  <input type="hidden" name="bot_role" value="lpaddle">
+
+  <input type="submit">
+</form>
+{% endif %}
+
+{% endblock %}

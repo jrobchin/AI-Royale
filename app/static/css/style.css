@@ -1,0 +1,63 @@
+@font-face {
+  font-family: sofia-pro;
+  src: url(/static/fonts/sofia-pro-black-webfont.ttf);
+  font-weight: bold;
+}
+@font-face {
+  font-family: sofia-reg;
+  src: url(/static/fonts/SofiaProMedium.ttf);
+  font-weight: normal;
+}
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  font-family: sofia-reg;
+  font-weight: 300;
+  background-color: rgb(245, 245, 245);
+}
+.jumboheader {
+  font-family: sofia-pro;
+  font-size: 10em;
+  line-height: .75em;
+}
+.fpageheads {
+  font-family: sofia-reg;
+  font-size: 3em;
+  color: white;
+}
+nav {
+  background-color: white;
+}
+#bluuu {
+  background-color: hsl(226, 70%, 64%);
+}
+#grrey {
+  background-color: rgb(245, 245, 245);
+}
+.btn-fpage-top {
+  color: #6480E2;
+  border-color: #6480E2;
+}
+.btn-fpage-top:hover {
+  color: white;
+  border-color: #6480E2;
+  background-color: #6480E2;
+}
+.btn-fpage-down {
+  color: white;
+  border-color: white;
+}
+.btn-fpage-down:hover {
+  color: #6480E2;
+  border-color: white;
+  background-color: white;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.scrollClass {
+  overflow-y: scroll;
+  height: 92vh;
+}

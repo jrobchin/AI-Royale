@@ -1,5 +1,6 @@
 import os
 import json
+import random
 import base64
 
 from app import session_required
@@ -41,10 +42,27 @@ def format_for_bots(state, paddle):
 bp = Blueprint('game', __name__, url_prefix='/game')
 
 @bp.route('/', methods=['GET', 'POST'])
-def index():
+@session_required
+def game_index():
     uid = request.cookies.get('uid')
 
+    games = []
     game_keys = [[key.decode(), key.decode().split(':')[-1]] for key in rs.keys("game:{}:*".format(GAME))]
+    for key in game_keys:
+        game = {'gid': key[1]}
+
+        state = json.loads(rs.get(key[0]).decode())
+
+        game['owner'] = state['owner']
+        game['elo'] = random.randint(100, 3000)
+        game['n_players'] = len(state['players'])
+        if game['n_players'] < 2:
+            game['button'] = "Join"
+        else:
+            game['button'] = "Watch"
+
+        games.append(game)
+
     if request.method == 'POST':
         uid = request.form.get('uid')
         if uid != "":
@@ -54,13 +72,15 @@ def index():
                 resp.set_cookie('uid', uid)
                 return resp
         flash("That uid is taken or empty!")
-        return render_template('index.html', games=game_keys, uid=uid)
-    return render_template('index.html', games=game_keys, uid=uid)
+    return render_template('leaderboard.html', games=games, uid=uid)
 
 @bp.route('/create', methods=['GET', 'POST'])
 @session_required
 def create_game():
     """
+    ARGS:
+        computer (boolean): should we provide a computer.
+    
     GET:
         ret: create game page.
     
@@ -71,8 +91,11 @@ def create_game():
     """
 
     if request.method == 'GET':
-        return "Create game page"
+        return render_template('creategame.html')
     elif request.method == 'POST':
+        # parse args
+        with_computer = request.args.get('computer')
+
         # parse form
         bot_url = request.form['bot_url']
         bot_role = request.form['bot_role'] # role in game (eg. which pong paddle)
@@ -89,11 +112,31 @@ def create_game():
         # add players
         uid = request.cookies.get('uid') 
         state['owner'] = uid
+
+        # add bot to game state
+        state['bots'] = {}
+        if with_computer:
+            state['players'] = [
+                'computer',
+                uid
+            ]
+            state['bots'] = {
+                'lpaddle': {
+                    "username": 'computer',
+                    "url": 'https://json.lib.id/zhuda-bot-builder@dev/',
+                },
+                'rpaddle': {
+                    "username": uid,
+                    "url": bot_url,
+                }
+            }
+            state['start'] = True
+            rs.set(redis_key, json.dumps(state))
+            return redirect('/game/play/{}'.format(gid))
+
         state['players'] = [
             uid
         ]
-
-        # add bot to game state
         state['bots'] = {
             bot_role: {
                 "username": uid,
@@ -122,14 +165,17 @@ def join_game(gid):
         # get game state
         redis_key = redis_game_key(gid, GAME)
         state = json.loads(rs.get(redis_key).decode())
-        if len(state['players']) >= state['MAX_PLAYERS'] and uid not in state['players']:
-            flash("Cannot join game, already full.")
-            return redirect('/game')
 
-        if uid in state['players']:
-            return redirect('/game/lobby/{}'.format(gid))
-        else:
-            return render_template('join.html', gid=gid)
+        if len(state['players']) > 1:
+            return redirect("/game/play/{}".format(gid))
+        # if len(state['players']) >= state['MAX_PLAYERS'] and uid not in state['players']:
+        #     flash("Cannot join game, already full.")
+        #     return redirect('/game')
+
+        # if uid in state['players']:
+        #     return redirect('/game/lobby/{}'.format(gid))
+        # else:
+        return render_template('join.html', gid=gid)
     elif request.method == 'POST':
         # parse form
         bot_url = request.form['bot_url']
@@ -153,7 +199,7 @@ def join_game(gid):
             state['ready'] = True
         rs.set(redis_key, json.dumps(state))
 
-        return redirect('/game/lobby/{}'.format(gid))
+        return redirect('/game/start/{}'.format(gid))
 
 @bp.route('/lobby/<gid>')
 @session_required
@@ -166,10 +212,7 @@ def lobby_game(gid):
     players = state['players']
     ready = state['ready']
 
-    if uid in players:
-        return render_template('lobby.html', players=players, player_count=len(players), gid=gid, ready=ready)
-    else:
-        return redirect("/game/")
+    return render_template('lobby.html', players=players, player_count=len(players), gid=gid, ready=ready)
 
 @bp.route('/start/<gid>')
 @session_required
@@ -200,7 +243,11 @@ def show_game(gid):
         redis_key = redis_game_key(gid, GAME)
         state = json.loads(rs.get(redis_key).decode())
         return jsonify(state)
-    return render_template('pong.html', gid=gid)
+    else:
+        # get game state
+        redis_key = redis_game_key(gid, GAME)
+        state = json.loads(rs.get(redis_key).decode())
+        return render_template('watchgame.html', gid=gid, player1=state['players'][0], player2=state['players'][1])
 
 @bp.route('/next-states')
 def next_states():
