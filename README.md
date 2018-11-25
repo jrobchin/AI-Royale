@@ -1,0 +1,3 @@
+# AI Royale - Creating Bots for Head to Head Competition in Pong!
+
+Our inspiration come from coding competitions/challenges being very one sided. We're all given a coding problem and the person with the fastest/most optimal solution wins. However, there's a real lack of satisfaction and competition when it comes to these competitions. Our solution to this was to create an online competition platform where individuals just plug their logic and play against other people's bots to score high on the leaderboard.
