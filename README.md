@@ -29,7 +29,7 @@ AI Royale is a streamlined platform that makes it easy for any programmer to due
 
 ## How we built it:
 
-![Architecuture Diagram](https://imgur.com/a/mjEKKOx.jpg)
+![Architecuture Diagram](/airoyal-archdiagram.jpg)
 <img src="https://imgur.com/a/mjEKKOx.jpg"/>
 
 - **User Interface:** HTML / CSS + Bootstrap / Native JavaScript
