@@ -2,10 +2,6 @@
 
 Our inspiration come from coding competitions/challenges being very one sided. We're all given a coding problem and the person with the fastest/most optimal solution wins. However, there's a real lack of satisfaction and competition when it comes to these competitions. Our solution to this was to create an online competition platform where individuals just plug their logic and play against other people's bots to score high on the leaderboard.
 
-Check out the project developed for [Hack Western 5](https://hackwestern.com/) on [devpost](https://devpost.com/software/ai-royale-f2emaw).
-
-A vast majority of this project was put together using [Python](http://python.org), [Flask](http://flask.pocoo.org/docs/1.0/), [redis-py](https://github.com/andymccurdy/redis-py), and [requests](http://docs.python-requests.org/en/master/).
-
 ## Our Inspiration:
 The typical coding competition involves algorithmic challenges on various coding platforms. The fastest and the most efficient are determined to be the best through various metrics. But we wanted to create **a platform to duel bots in a real-time head-to-head battle.**
 
